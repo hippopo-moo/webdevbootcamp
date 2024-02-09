@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const session = require('express-session')
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate')
@@ -28,6 +29,18 @@ app.use(express.urlencoded({extended: true}))
 app.use(methodOverride('_method'))
 app.use(morgan('dev'))
 app.use(express.static(path.join(__dirname, 'public')))
+
+// sessionの設定
+const sessionConfig = {
+    secret: 'mysecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+app.use(session(sessionConfig))
 
 // routeの設定
 app.use('/campgrounds', campgroundRouter)
