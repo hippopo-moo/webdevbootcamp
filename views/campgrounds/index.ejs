@@ -1,0 +1,25 @@
+<% layout('layouts/boilerplate') -%>
+<h1 class="fw-bold text-dark">キャンプ場一覧</h1>
+
+<a href="/campgrounds/new" class="btn btn-primary">キャンプ場新規登録</a>
+
+<div class="list-group list-group-flush mt-5">
+    <% for (const campground of campgrounds) { %>
+        <!-- <li class="list-group-item"><a href="/campgrounds/<%= campground._id %>" class="text-decoration-none link-secondary"><%= campground.title %> (<%= campground.location %>)</a></li> -->
+        <div class="card mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="<%= campground.image %>" alt="" class="w-100">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= campground.title %> <span class="fs-6">(<%= campground.location %>)</span></h5>
+                        <p class="card-text"><%= campground.description %></p>
+                        <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+</div>
