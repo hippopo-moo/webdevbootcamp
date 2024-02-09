@@ -7,6 +7,7 @@ const ejsMate = require('ejs-mate')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
 const morgan = require('morgan');
+const flash = require('connect-flash')
 
 const campgroundRouter = require('./routes/campgrounds')
 const reviewRouter = require('./routes/reviews')
@@ -41,6 +42,12 @@ const sessionConfig = {
     }
 }
 app.use(session(sessionConfig))
+app.use(flash())
+app.use((req, res, next)=> {
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    next()
+})
 
 // routeの設定
 app.use('/campgrounds', campgroundRouter)
