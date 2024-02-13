@@ -8,9 +8,13 @@ const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override')
 const morgan = require('morgan');
 const flash = require('connect-flash')
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const User = require('./models/user')
 
 const campgroundRouter = require('./routes/campgrounds')
 const reviewRouter = require('./routes/reviews')
+const usersRouter = require('./routes/users')
 
 // localhostだと何故か繋がらなくなったので、127.0.0.1に変更。無事繋がった。
 mongoose.connect('mongodb://127.0.0.1:27017/yelpCamp', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
@@ -42,6 +46,13 @@ const sessionConfig = {
     }
 }
 app.use(session(sessionConfig))
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser())
+
 app.use(flash())
 app.use((req, res, next)=> {
     res.locals.success = req.flash('success')
@@ -50,6 +61,7 @@ app.use((req, res, next)=> {
 })
 
 // routeの設定
+app.use('/', usersRouter)
 app.use('/campgrounds', campgroundRouter)
 app.use('/campgrounds/:id/reviews', reviewRouter)
 
